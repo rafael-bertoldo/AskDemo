@@ -1,11 +1,13 @@
-import { BrowserRouter } from "react-router-dom";
 import { Routes } from "./routes";
+import { ToastContainer, toast } from "react-toastify";
 
 function App() {
   return (
-    <BrowserRouter>
+    <>
+      <ToastContainer />
+
       <Routes />
-    </BrowserRouter>
+    </>
   );
 }
 
