@@ -29,6 +29,7 @@ export const AdmDashboard = () => {
         icon={FiLogOut}
         iconText="Sair"
         onclick={handleLogout}
+        adm
       />
       <section className="min-h-screen w-full max-w-[2000px] ml-auto pt-[10px] pb-[10px] flex items-start justify-around text-center">
         <div className="p-[20px] bg-white shadow-3xl w-2/5 flex flex-col items-center justify-around overflow-auto">

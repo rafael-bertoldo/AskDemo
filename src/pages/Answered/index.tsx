@@ -17,12 +17,6 @@ export const Answered = () => {
     setAsks(loadAsks(user));
   }, []);
 
-  useEffect(() => {
-    if (user.user_profile.profile_code === "usr") {
-      history.push("/dashboard");
-    }
-  }, []);
-
   const handleLogout = () => {
     localStorage.clear();
     return <Redirect to="/" />;
@@ -33,6 +27,7 @@ export const Answered = () => {
       <Navbar
         userName={user.user_name}
         isLogged
+        adm
         icon={FiLogOut}
         iconText="Sair"
         onclick={handleLogout}
@@ -48,7 +43,7 @@ export const Answered = () => {
           <span className="italic mt-8">{new Date().toLocaleDateString()}</span>
           <ul className="w-full">
             {asks?.map((ask, index) => {
-              if (ask?.ask.ask_status === "pending") {
+              if (ask?.ask.ask_status === "answered") {
                 return (
                   <li
                     className="bg-white mt-8 pl-4 pr-4 pt-6 pb-6 flex flex-col items-center justify-center border rounded-xl"

@@ -56,7 +56,7 @@ export const AskProvider = ({ children }: ProvidersProps) => {
 
   const checkAsk = useCallback((ask_id: string, user: User) => {
     const data = {
-      askStatus: "answered",
+      ask_status: "answered",
     };
 
     api

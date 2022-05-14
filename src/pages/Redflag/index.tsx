@@ -8,12 +8,13 @@ import { useAuth } from "../../providers/AuthProvider";
 export const Redflag = () => {
   const { user } = useAuth();
   const history = useHistory();
-  const { asks, deleteAsks } = useAsks();
+  const { asks, deleteAsks, setAsks, loadAsks } = useAsks();
 
   useEffect(() => {
     if (user.user_profile.profile_code === "usr") {
       history.push("/dashboard");
     }
+    setAsks(loadAsks(user));
   }, []);
 
   const handleLogout = () => {
@@ -25,6 +26,7 @@ export const Redflag = () => {
       <Navbar
         userName={user.user_name}
         isLogged
+        adm
         icon={FiLogOut}
         iconText="Sair"
         onclick={handleLogout}
@@ -40,7 +42,7 @@ export const Redflag = () => {
           <span className="italic mt-8">{new Date().toLocaleDateString()}</span>
           <ul className="w-full">
             {asks?.map((ask, index) => {
-              if (ask?.ask.ask_status === "pending") {
+              if (ask?.ask.ask_status === "redflag") {
                 return (
                   <li
                     className="bg-white mt-8 pl-4 pr-4 pt-6 pb-6 flex flex-col items-center justify-center border rounded-xl"

@@ -4,6 +4,8 @@ import { IconType } from "react-icons"
 export interface NavBarProps {
   userName: string
   isLogged?: boolean
+  student?: boolean
+  adm?: boolean
   icon?: IconType
   iconText?: string
   onclick?: () => void

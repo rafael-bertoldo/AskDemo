@@ -69,6 +69,7 @@ export const Dashboard = () => {
       <Navbar
         userName={user.user_name}
         isLogged
+        student
         icon={FiLogOut}
         iconText="Sair"
         onclick={handleLogout}
