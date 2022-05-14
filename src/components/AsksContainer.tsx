@@ -20,6 +20,10 @@ export const AsksContainer = () => {
     setAskId(ask_id);
   };
 
+  const handleCloseEditModal = () => {
+    setEditModal(false);
+  };
+
   useEffect(() => {
     const loadedAsks = loadAsks(user);
     setAsks(loadedAsks);
@@ -62,7 +66,7 @@ export const AsksContainer = () => {
               >
                 {ask.user.user_email === user?.user_email && (
                   <span
-                    className="italic text-orange ml-8 mr-8"
+                    className="italic text-orange ml-8 mr-8 cursor-pointer"
                     onClick={() => handleEditModal(ask.ask.ask_id)}
                   >
                     <FiEdit2 size={24} />
@@ -88,9 +92,12 @@ export const AsksContainer = () => {
       {editModal && (
         <form
           onSubmit={handleSubmit(onSubmitEdit)}
-          className="flex flex-col items-center justify-center absolute top-20 bg-transparentBlack w-3/4 text-center p-8 rounded"
+          className="flex flex-col items-center justify-center absolute top-20 bg-transparentBlack w-2/4 text-center p-8 rounded-3xl"
         >
-          <span className="text-white font-bold ml-96 cursor-pointer">
+          <span
+            onClick={handleCloseEditModal}
+            className="text-white font-bold ml-96 cursor-pointer"
+          >
             <FiXCircle size={32} />
           </span>
           <div className="mb-4">
