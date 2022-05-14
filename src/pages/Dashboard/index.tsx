@@ -8,6 +8,7 @@ import { useAsks } from "../../providers/AskProvider";
 import { Ask } from "../../types";
 import { Navbar } from "../../components/Navbar";
 import { FiLogOut } from "react-icons/fi";
+import { AsksContainer } from "../../components/AsksContainer";
 
 export const Dashboard = () => {
   const [createNewAsk, setCreateNewAsk] = useState(false);
@@ -27,10 +28,10 @@ export const Dashboard = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const loadedAsks = loadAsks(user);
-    setAsks(loadedAsks);
-  }, []);
+  // useEffect(() => {
+  //   const loadedAsks = loadAsks(user);
+  //   setAsks(loadedAsks);
+  // }, []);
 
   const handleCreateAsk = () => {
     setCreateNewAsk(!createNewAsk);
@@ -61,8 +62,10 @@ export const Dashboard = () => {
   if (user === undefined) {
     <Redirect to="/" />;
   }
+
+  // console.log(user.user_classroom.classroom_name);
   return (
-    <>
+    <div className="flex items-center justify-center flex-col">
       <Navbar
         userName={user.user_name}
         isLogged
@@ -70,15 +73,32 @@ export const Dashboard = () => {
         iconText="Sair"
         onclick={handleLogout}
       />
-      <main>
+      <main className="w-3/4 shadow-3xl mt-4 p-4 text-center">
         <section>
+          <h2 className="text-black font-bold font-sans text-2xl">
+            Bem vindo a demo do{" "}
+            <span className="text-blue">
+              {user.user_classroom.classroom_name}
+            </span>
+          </h2>
           {/* <TitleContainer /> */}
-          <button onClick={handleCreateAsk}>Fazer Pergunta</button>
+          <button
+            className="bg-blue p-3 rounded w-40 font-bold text-white hover:bg-mediumBlue transition-colors mt-4 mb-4"
+            onClick={handleCreateAsk}
+          >
+            Fazer Pergunta
+          </button>
           {createNewAsk && (
-            <form>
-              <div>
-                <label htmlFor="ask_theme">Assunto: </label>
+            <form
+              onSubmit={handleSubmit(onSubmitFunction)}
+              className="flex flex-col items-center justify-center"
+            >
+              <div className="mb-4">
+                <label className="pr-4" htmlFor="ask_theme">
+                  Assunto:{" "}
+                </label>
                 <select
+                  className="bg-lightGray p-1 rounded"
                   name="ask_theme"
                   onChange={(e) => setTheme(e.target.value)}
                   value={theme}
@@ -90,8 +110,11 @@ export const Dashboard = () => {
                 </select>
               </div>
               <div>
-                <label htmlFor="ask_sub_theme">Tema: </label>
+                <label className="pr-4" htmlFor="ask_sub_theme">
+                  Tema:{" "}
+                </label>
                 <select
+                  className="bg-lightGray p-1 rounded"
                   name="ask_sub_theme"
                   onChange={(e) => setSubTheme(e.target.value)}
                   value={subTheme}
@@ -130,18 +153,23 @@ export const Dashboard = () => {
                 </select>
               </div>
               <textarea
+                className="border-black border-2 rounded mt-4 mb-4 w-3/4 h-24"
                 name="ask_body"
                 id="ask_body"
-                cols={30}
-                rows={10}
                 onChange={(e) => setAskBody(e.target.value)}
                 value={askBody}
               ></textarea>
-              <button type="submit">Fazer pergunta</button>
+              <button
+                className="bg-blue p-3 rounded w-40 font-bold text-white hover:bg-mediumBlue transition-colors mt-4 mb-4"
+                type="submit"
+              >
+                Fazer pergunta
+              </button>
             </form>
           )}
         </section>
+        <AsksContainer />
       </main>
-    </>
+    </div>
   );
 };

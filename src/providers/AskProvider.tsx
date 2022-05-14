@@ -11,6 +11,7 @@ import {
   Ask,
   AskContextData,
   CreateAskData,
+  ListClassroomAsk,
   ProvidersProps,
   UpdateAskData,
   User,
@@ -29,13 +30,17 @@ export const useAsks = () => {
 };
 
 export const AskProvider = ({ children }: ProvidersProps) => {
-  const [asks, setAsks] = useState<Ask[]>([] as Ask[]);
+  const [asks, setAsks] = useState<ListClassroomAsk[]>(
+    [] as ListClassroomAsk[]
+  );
   const token: string = localStorage.getItem("@ask.demo:token") || "";
 
   const loadAsks = useCallback((user: User) => {
     api
       .get(`/classroomAsk/${user.user_classroom_id}`)
-      .then((res) => setAsks(res.data))
+      .then((res) => {
+        setAsks(res.data);
+      })
       .catch((e) => console.log(e));
   }, []);
 
@@ -89,8 +94,6 @@ export const AskProvider = ({ children }: ProvidersProps) => {
 
   const editAsk = useCallback(
     (ask_id: string, data: UpdateAskData, user: User) => {
-      const token = localStorage.getItem("@ask_demo:token") || "";
-
       api
         .patch(`ask/${ask_id}`, data, {
           headers: {

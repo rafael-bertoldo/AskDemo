@@ -9,7 +9,7 @@ export const Navbar = ({
   onclick,
 }: NavBarProps) => {
   return (
-    <nav className="bg-blue h-16 flex items-center justify-between absolute w-screen">
+    <nav className="bg-blue h-16 flex items-center justify-between w-screen">
       <h1 className="text-white font-bold text-lg pl-8">Ask.demo</h1>
       {isLogged && (
         <span className="text-white font-bold text-lg">{userName}</span>

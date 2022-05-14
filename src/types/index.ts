@@ -46,6 +46,33 @@ export interface Ask {
   userId: User
 }
 
+export interface ListClassroomAsk {
+  ask: {
+    ask_id: string
+    ask_body: string
+    ask_theme: string
+    ask_sub_theme: string
+    ask_status: string
+    ask_createdAt: Date
+    user_id: string
+    userId: User
+  }
+  user: {
+    user_id: string;
+    user_name: string;
+    user_email: string;
+    user_password: string;
+    user_gender: string;
+    user_avatar: string;
+    user_mentor: string;
+    user_instructor: string;
+    user_profile: Profile
+    user_profile_id: string;
+    user_classroom: Classroom
+    user_classroom_id: string;
+  }
+}
+
 export interface AppProviderProps {
   children: ReactNode
 }
@@ -88,7 +115,7 @@ export interface UpdateAskData {
 }
 
 export interface AskContextData {
-  asks: Ask[]
+  asks: ListClassroomAsk[]
   loadAsks: (user: User) => void
   createAsk: (data: CreateAskData, user: User) => void
   checkAsk: (ask_id: string, user: User) => void
