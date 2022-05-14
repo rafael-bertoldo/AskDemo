@@ -126,3 +126,18 @@ export interface AskContextData {
   editAsk: (ask_id: string, data: UpdateAskData, user: User) => void
   setAsks: React.Dispatch<React.SetStateAction<Ask[]>> | any
 }
+
+export interface UserContextData {
+  editUserName: (data: EditData, setLocalUser: React.Dispatch<any>) => void
+  editUserEmail: (data: EditData, setLocalUser: React.Dispatch<any>) => void
+  editUserGender: (data: EditData, setLocalUser: React.Dispatch<any>) => void
+  editUserPassword: (data: EditData, setLocalUser: React.Dispatch<any>) => void
+}
+
+export interface EditData {
+  user_name?: string,
+  user_email?: string,
+  user_gender?: string,
+  old_password?: string,
+  user_password?: string
+}

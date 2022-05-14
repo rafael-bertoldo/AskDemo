@@ -1,8 +1,10 @@
-import { NavBarProps } from "../types";
+import { EditData, NavBarProps } from "../types";
 import { FiEdit3, FiLogIn, FiUser } from "react-icons/fi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../providers/AuthProvider";
 import { useHistory } from "react-router-dom";
+import { useUser } from "../providers/UserProvider";
+import { useForm } from "react-hook-form";
 
 export const Navbar = ({
   userName,
@@ -18,8 +20,18 @@ export const Navbar = ({
   const [editName, setEditName] = useState(false);
   const [editEmail, setEditEmail] = useState(false);
   const [editGender, setEditGender] = useState(false);
-  const { user } = useAuth();
+  const [editNameData, setEditNameData] = useState("");
+  const [editEmailData, setEditEmailData] = useState("");
+  const [editGenderData, setEditGenderData] = useState("");
+  const [editOldPasswordData, setEditOldPasswordData] = useState("");
+  const [editNewPasswordData, setEditNewPasswordData] = useState("");
+  const [localUser, setLocalUSer] = useState(
+    localStorage.getItem("@ask.demo:user") || ""
+  );
   const history = useHistory();
+  const { editUserEmail, editUserGender, editUserName, editUserPassword } =
+    useUser();
+  const { handleSubmit } = useForm();
 
   const handleProfile = () => {
     setProfile(!profile);
@@ -40,6 +52,48 @@ export const Navbar = ({
   const handleNavigate = (path: string) => {
     history.push(`/${path}`);
   };
+
+  const onSubmitNameEdit = () => {
+    const data = {
+      user_name: editNameData,
+    };
+    editUserName(data, setLocalUSer);
+    setEditNameData("");
+    setEditName(false);
+  };
+
+  const onSubmitEmailEdit = () => {
+    const data = {
+      user_email: editEmailData,
+    };
+    editUserEmail(data, setLocalUSer);
+    setEditEmailData("");
+    setEditEmail(false);
+  };
+
+  const onSubmitGenderEdit = () => {
+    const data = {
+      user_gender: editGenderData,
+    };
+    editUserGender(data, setLocalUSer);
+    setEditGenderData("");
+    setEditGender(false);
+  };
+
+  const onSubmitPasswordEdit = () => {
+    const data = {
+      old_password: editOldPasswordData,
+      user_password: editNewPasswordData,
+    };
+    editUserPassword(data, JSON.parse(localUser));
+    setEditOldPasswordData("");
+    setEditNewPasswordData("");
+  };
+
+  useEffect(() => {
+    setLocalUSer(localUser);
+  }, []);
+
   return (
     <>
       <nav className="bg-blue h-16 flex items-center justify-between w-screen">
@@ -53,7 +107,9 @@ export const Navbar = ({
         )}
         {isLogged && (
           <>
-            <span className="text-white font-bold text-lg">{userName}</span>
+            <span className="text-white font-bold text-lg">
+              {JSON.parse(localUser).user_name}
+            </span>
           </>
         )}
         <span
@@ -92,14 +148,16 @@ export const Navbar = ({
             </>
           )}
           <li className="flex items-center mb-2">
-            {user.user_name}{" "}
+            {JSON.parse(localUser).user_name}{" "}
             <FiEdit3 onClick={handleEditName} className="ml-4 cursor-pointer" />
             {editName && (
-              <form>
+              <form onSubmit={handleSubmit(onSubmitNameEdit)}>
                 <input
                   type="text"
                   placeholder="alterar nome"
                   className="ml-8 border-[1px] rounded p-[4px]"
+                  onChange={(e) => setEditNameData(e.target.value)}
+                  value={editNameData}
                 />
                 <button
                   className="bg-blue p-[4px] border-[1px] border-blue rounded w-20 font-bold text-white hover:bg-mediumBlue hover:border-mediumBlue transition-colors mt-4 mb-4 ml-4"
@@ -112,17 +170,19 @@ export const Navbar = ({
             )}
           </li>
           <li className="flex items-center mb-2">
-            {user.user_email}{" "}
+            {JSON.parse(localUser).user_email}{" "}
             <FiEdit3
               onClick={handleEditEmail}
               className="ml-4 cursor-pointer"
             />
             {editEmail && (
-              <form>
+              <form onSubmit={handleSubmit(onSubmitEmailEdit)}>
                 <input
                   type="text"
                   placeholder="alterar email"
                   className="ml-8 border-[1px] rounded p-[4px]"
+                  onChange={(e) => setEditEmailData(e.target.value)}
+                  value={editEmailData}
                 />
                 <button
                   className="bg-blue p-[4px] border-[1px] border-blue rounded w-20 font-bold text-white hover:bg-mediumBlue hover:border-mediumBlue transition-colors mt-4 mb-4 ml-4"
@@ -135,17 +195,19 @@ export const Navbar = ({
             )}
           </li>
           <li className="flex items-center mb-2">
-            {user.user_gender}{" "}
+            {JSON.parse(localUser).user_gender}{" "}
             <FiEdit3
               onClick={handleEditGender}
               className="ml-4 cursor-pointer"
             />
             {editGender && (
-              <form>
+              <form onSubmit={handleSubmit(onSubmitGenderEdit)}>
                 <input
                   type="text"
                   placeholder="alterar gênero"
                   className="ml-8 border-[1px] rounded p-[4px]"
+                  onChange={(e) => setEditGenderData(e.target.value)}
+                  value={editGenderData}
                 />
                 <button
                   className="bg-blue p-[4px] border-[1px] border-blue rounded w-20 font-bold text-white hover:bg-mediumBlue hover:border-mediumBlue transition-colors mt-4 mb-4 ml-4"
@@ -158,7 +220,9 @@ export const Navbar = ({
             )}
           </li>
           <li>
-            <span>trocar senha</span>
+            <span className="bg-blue p-[4px] border-[1px] border-blue rounded w-20 font-bold text-white hover:bg-mediumBlue hover:border-mediumBlue hover:cursor-pointer transition-colors mt-4 mb-4 ml-4">
+              trocar senha
+            </span>
           </li>
         </ul>
       )}
