@@ -57,7 +57,13 @@ export const Redflag = () => {
                       </span>
                     </div>
                     <h3>
-                      Pergunta feita pelo team:{" "}
+                      Pergunta feita por:{" "}
+                      <span className="text-darkBlue font-bold">
+                        {ask.user.user_mentor}
+                      </span>
+                    </h3>
+                    <h3>
+                      Facilitador:{" "}
                       <span className="text-darkBlue font-bold">
                         {ask.user.user_mentor}
                       </span>
