@@ -10,28 +10,23 @@ import { Navbar } from "../../components/Navbar";
 import { FiLogOut } from "react-icons/fi";
 import { AsksContainer } from "../../components/AsksContainer";
 
-export const Dashboard = () => {
+interface DashProps {
+  authenticated: boolean;
+  handleLogout: () => void;
+}
+
+export const Dashboard = ({ authenticated, handleLogout }: DashProps) => {
   const [createNewAsk, setCreateNewAsk] = useState(false);
   const [theme, setTheme] = useState("");
   const [subTheme, setSubTheme] = useState("");
   const [askBody, setAskBody] = useState("");
+  const localUser = localStorage.getItem("@ask.demo:user");
 
   const history = useHistory();
 
   const { user, token } = useAuth();
   const { loadAsks, asks, createAsk, setAsks } = useAsks();
   const { handleSubmit } = useForm();
-
-  useEffect(() => {
-    if (user.user_profile.profile_code !== "usr") {
-      history.push("/demo");
-    }
-  }, []);
-
-  // useEffect(() => {
-  //   const loadedAsks = loadAsks(user);
-  //   setAsks(loadedAsks);
-  // }, []);
 
   const handleCreateAsk = () => {
     setCreateNewAsk(!createNewAsk);
@@ -51,19 +46,14 @@ export const Dashboard = () => {
     setAskBody("");
   };
 
-  const handleNavigate = (path: string) => {
-    history.push(path);
-  };
-
-  const handleLogout = () => {
-    localStorage.clear();
-  };
-
-  if (user === undefined) {
-    <Redirect to="/" />;
+  if (authenticated && localUser) {
+    if (JSON.parse(localUser).user_profile.profile_code !== "usr") {
+      return <Redirect to="/demo" />;
+    }
+  } else if (!authenticated) {
+    return <Redirect to="/" />;
   }
 
-  // console.log(user.user_classroom.classroom_name);
   return (
     <div className="flex items-center justify-center flex-col">
       <Navbar

@@ -5,7 +5,7 @@ import { SignInCredentials, SignInData, User } from "../../types";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 
 import "react-toastify/dist/ReactToastify.css";
 import { useCallback, useEffect, useState } from "react";
@@ -15,9 +15,14 @@ const signInSchema = yup.object().shape({
   password: yup.string().required("senha obrigatória"),
 });
 
-export const Home = () => {
+interface HomeProps {
+  authenticated: boolean
+}
+
+export const Home = ({authenticated}: HomeProps) => {
   const { signIn, user } = useAuth();
   const history = useHistory();
+  const localUser = localStorage.getItem("@ask.demo:user");
 
   const {
     formState: { errors },
@@ -29,11 +34,13 @@ export const Home = () => {
     await signIn(data);
   };
 
-  useEffect(() => {
-    if (user) {
-      history.push("/dashboard");
+  if (authenticated && localUser) {
+    if (JSON.parse(localUser).user_profile.profile_code === "usr") {
+      return <Redirect to="/dashboard" />;
     }
-  }, []);
+
+    return <Redirect to="/demo" />;
+  }
 
   return (
     <>

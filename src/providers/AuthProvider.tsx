@@ -30,6 +30,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: ProvidersProps) => {
   const history = useHistory();
+  const [authenticated, setAuthenticated] = useState(false);
   const [data, setData] = useState<AuthState>(() => {
     const token = localStorage.getItem("@ask.demo:token");
     const user = localStorage.getItem("@ask.demo:user");
@@ -55,7 +56,13 @@ export const AuthProvider = ({ children }: ProvidersProps) => {
           theme: "colored",
           position: "top-center",
         });
-        history.push("/dashboard");
+
+        setAuthenticated(true);
+        if (user.user_profile.profile_code === "usr") {
+          history.push("/dashboard");
+        }
+
+        history.push("/demo");
       })
       .catch((e) => {
         toast.error("Por favor verifique seu login/email", {
@@ -67,7 +74,13 @@ export const AuthProvider = ({ children }: ProvidersProps) => {
 
   return (
     <AuthContext.Provider
-      value={{ signIn, token: data.token, user: data.user }}
+      value={{
+        signIn,
+        token: data.token,
+        user: data.user,
+        authenticated,
+        setAuthenticated,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -5,22 +5,27 @@ import { Navbar } from "../../components/Navbar";
 import { useAsks } from "../../providers/AskProvider";
 import { useAuth } from "../../providers/AuthProvider";
 
-export const Answered = () => {
+interface AnsweredProps {
+  authenticated: boolean;
+  handleLogout: () => void;
+}
+
+export const Answered = ({ authenticated, handleLogout }: AnsweredProps) => {
+  const localUser = localStorage.getItem("@ask.demo:user");
   const { user } = useAuth();
-  const history = useHistory();
   const { asks, setAsks, loadAsks, deleteAsks } = useAsks();
 
   useEffect(() => {
-    if (user.user_profile.profile_code === "usr") {
-      history.push("/dashboard");
-    }
     setAsks(loadAsks(user));
   }, []);
 
-  const handleLogout = () => {
-    localStorage.clear();
+  if (authenticated && localUser) {
+    if (JSON.parse(localUser).user_profile.profile_code === "usr") {
+      return <Redirect to="/dashboard" />;
+    }
+  } else if (!authenticated) {
     return <Redirect to="/" />;
-  };
+  }
 
   return (
     <>

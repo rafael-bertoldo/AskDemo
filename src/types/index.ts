@@ -97,6 +97,8 @@ export interface AuthContextData {
   user: User;
   token: String;
   signIn: (credentials: SignInCredentials) => void;
+  authenticated: boolean
+  setAuthenticated: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export interface SignInData {

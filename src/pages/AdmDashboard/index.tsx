@@ -5,22 +5,29 @@ import { Navbar } from "../../components/Navbar";
 import { useAsks } from "../../providers/AskProvider";
 import { useAuth } from "../../providers/AuthProvider";
 
-export const AdmDashboard = () => {
+interface AdmDashProps {
+  authenticated: boolean;
+  setAuthenticated?: React.Dispatch<React.SetStateAction<boolean>>;
+  handleLogout: () => void;
+}
+
+export const AdmDashboard = ({ authenticated, handleLogout }: AdmDashProps) => {
+  const localUser = localStorage.getItem("@ask.demo:user");
   const { user } = useAuth();
   const history = useHistory();
   const { asks, setAsks, loadAsks, checkAsk, redflagAsk } = useAsks();
 
   useEffect(() => {
-    if (user.user_profile.profile_code === "usr") {
-      history.push("/dashboard");
-    }
     setAsks(loadAsks(user));
   }, []);
 
-  const handleLogout = () => {
-    localStorage.clear();
+  if (authenticated && localUser) {
+    if (JSON.parse(localUser).user_profile.profile_code === "usr") {
+      return <Redirect to="/dashboard" />;
+    }
+  } else if (!authenticated) {
     return <Redirect to="/" />;
-  };
+  }
   return (
     <>
       <Navbar

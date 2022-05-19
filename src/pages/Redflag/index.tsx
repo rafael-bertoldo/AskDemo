@@ -5,22 +5,28 @@ import { Navbar } from "../../components/Navbar";
 import { useAsks } from "../../providers/AskProvider";
 import { useAuth } from "../../providers/AuthProvider";
 
-export const Redflag = () => {
+interface RedflagProps {
+  authenticated: boolean
+  handleLogout: () => void
+}
+
+export const Redflag = ({authenticated, handleLogout}: RedflagProps) => {
   const { user } = useAuth();
-  const history = useHistory();
   const { asks, deleteAsks, setAsks, loadAsks } = useAsks();
+  const localUser = localStorage.getItem("@ask.demo:user");
 
   useEffect(() => {
-    if (user.user_profile.profile_code === "usr") {
-      history.push("/dashboard");
-    }
     setAsks(loadAsks(user));
   }, []);
 
-  const handleLogout = () => {
-    localStorage.clear();
+
+  if (authenticated && localUser) {
+    if (JSON.parse(localUser).user_profile.profile_code === "usr") {
+      return <Redirect to="/dashboard" />;
+    }
+  } else if(!authenticated) {
     return <Redirect to="/" />;
-  };
+  }
   return (
     <>
       <Navbar
